@@ -33,28 +33,31 @@ class Person:
         self.name = name
         self.birthdate = birthdate
     def age(self):
-        today = datetime.date.today()
-        year_age = today.year-self.birthdate.year
-        month_age = today.month-self.birthdate.month
-        day_age = today.day-self.birthdate.day
-        if month_age < 0:
-            year_age -= 1
-            month_age +=12
-        if day_age < 0:
-            month_age -= 1
-            day_age += (today.replace(year=today.year-1, month=self.birthdate.month).day - self.birthdate.day)
+        now = datetime.datetime.now()
+        years = int(now.year) - int(str(self.birthdate.year))
+        months = int(now.month) - int(str(self.birthdate.month))
+        days = int(now.day) - int(str(self.birthdate.day))
 
-        return year_age, month_age, day_age
+        if months == 12:
+            years += 1
+            months -= 12
+        if months <= 0:
+            years -= 1
+            months += 12
+        if days <= 0:
+            months -= 1
+            days += 31
+        return years, months, days
 
 # Создание функции для получения данных пользователя
 def getInput():
     name = nameEntry.get()
     birthdate = datetime.date(int(yearEntry.get()), int(monthEntry.get()), int(dateEntry.get()))
     monkey = Person(name, birthdate)
-    year_age, month_age, day_age = monkey.age()
+    years, months, days = monkey.age()
     textArea = tk.Text(master=window, height=10, width=25)
     textArea.grid(column=1, row=6)
-    answer = f'Приветик, {name}!!!\nТебе {year_age} лет, {month_age} месяцев и {day_age} дней!!!'
+    answer = f'Приветик, {name}!!!\nТебе {years} лет, {months} месяцев и {days} дней!!!'
     textArea.insert(tk.END, answer)
 
 # Создание кнопки для входных значений
